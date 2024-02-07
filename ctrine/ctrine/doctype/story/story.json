@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:STORY-{####}",
  "creation": "2024-02-06 17:25:27.707163",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -70,10 +71,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-07 15:36:05.609354",
+ "modified": "2024-02-07 15:47:09.111249",
  "modified_by": "Administrator",
  "module": "Ctrine",
  "name": "Story",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

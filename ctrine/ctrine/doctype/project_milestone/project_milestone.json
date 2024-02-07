@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:MILE-{#####}",
  "creation": "2024-02-06 16:17:14.875671",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -71,10 +72,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-06 16:20:31.175097",
+ "modified": "2024-02-07 15:43:24.323653",
  "modified_by": "Administrator",
  "module": "Ctrine",
  "name": "Project Milestone",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
