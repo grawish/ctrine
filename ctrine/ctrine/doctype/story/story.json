@@ -53,7 +53,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Parent Milestone",
-   "options": "Milestone",
+   "options": "Project Milestone",
    "reqd": 1
   },
   {
@@ -70,7 +70,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-06 17:46:19.747982",
+ "modified": "2024-02-07 15:36:05.609354",
  "modified_by": "Administrator",
  "module": "Ctrine",
  "name": "Story",
