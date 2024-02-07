@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-06 16:17:14.875671",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "subject_line",
+  "description",
+  "section_break_heyg",
+  "expected_start_date",
+  "expected_end_date",
+  "column_break_hrmk",
+  "actual_start_date",
+  "actual_end_date",
+  "section_break_gywk",
+  "parent_project"
+ ],
+ "fields": [
+  {
+   "fieldname": "subject_line",
+   "fieldtype": "Small Text",
+   "label": "Subject Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_heyg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "expected_start_date",
+   "fieldtype": "Date",
+   "label": "Expected Start Date"
+  },
+  {
+   "fieldname": "expected_end_date",
+   "fieldtype": "Date",
+   "label": "Expected End Date"
+  },
+  {
+   "fieldname": "column_break_hrmk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "actual_start_date",
+   "fieldtype": "Date",
+   "label": "Actual Start Date"
+  },
+  {
+   "fieldname": "actual_end_date",
+   "fieldtype": "Date",
+   "label": "Actual End Date"
+  },
+  {
+   "fieldname": "section_break_gywk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "parent_project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parent Project",
+   "options": "Project",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-02-06 16:20:31.175097",
+ "modified_by": "Administrator",
+ "module": "Ctrine",
+ "name": "Milestones",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
