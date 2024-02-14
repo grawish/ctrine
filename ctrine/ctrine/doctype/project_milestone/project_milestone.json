@@ -71,8 +71,18 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-02-07 15:43:24.323653",
+ "is_calendar_and_gantt": 1,
+ "links": [
+  {
+   "link_doctype": "Story",
+   "link_fieldname": "parent_milestone"
+  },
+  {
+   "link_doctype": "Task",
+   "link_fieldname": "custom_parent_milestone"
+  }
+ ],
+ "modified": "2024-02-13 18:50:06.489913",
  "modified_by": "Administrator",
  "module": "Ctrine",
  "name": "Project Milestone",
