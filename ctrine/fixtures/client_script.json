@@ -1,0 +1,46 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Project Milestone",
+  "enabled": 1,
+  "modified": "2024-02-21 14:04:44.526688",
+  "module": null,
+  "name": "project Milestone",
+  "script": "frappe.ui.form.on('Project Milestone', {\n\trefresh(frm) {\n\t    frm.add_custom_button(__('Go To Project'), function(){\n            window.open(`/app/project/${frm.doc.parent_project}`)\n        });\n        \n    \t frm.add_custom_button(__('Go To Task'), function(){\n            window.open(`/app/task?custom_parent_milestone=${frm.doc.name}`)\n        });\n        \n        frm.add_custom_button(__('Go To Story'), function(){\n           window.open(`/app/story?parent_milestone=${frm.doc.name}`)\n        });\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Story",
+  "enabled": 1,
+  "modified": "2024-02-21 14:05:16.745203",
+  "module": null,
+  "name": "Story",
+  "script": "frappe.ui.form.on('Story', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Go To Project'), function(){\n            window.open(`/app/project/${frm.doc.parent_project}`)\n        });\n        frm.add_custom_button(__('Go To Milestone'), function(){\n            window.open(`/app/project-milestone/${frm.doc.parent_milestone}`)\n        });\n        frm.add_custom_button(__('Go To Task'), function(){\n            window.open(`/app/task/view/list?custom_parent_story=${frm.doc.name}`)\n        });\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Task",
+  "enabled": 1,
+  "modified": "2024-02-21 14:05:02.448313",
+  "module": null,
+  "name": "Task",
+  "script": "frappe.ui.form.on('Task', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Go To Project'), function(){\n            window.open(`/app/project/${frm.doc.project}`)\n        });\n        frm.add_custom_button(__('Go To Milestone'), function(){\n            window.open(`/app/project-milestone/${frm.doc.custom_parent_milestone}`)\n        });\n        frm.add_custom_button(__('Go To Story'), function(){\n            window.open(`/app/story/${frm.doc.custom_parent_story}`)\n        });\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Timesheet",
+  "enabled": 1,
+  "modified": "2024-03-14 15:56:40.290904",
+  "module": "Ctrine",
+  "name": "Populating Rows",
+  "script": "frappe.ui.form.on('Timesheet', {\r\n    onload: function(frm) {\r\n        var creation_datetime;\r\n\r\n        // Check if the form is new or being edited\r\n        if (frm.doc.__islocal) {\r\n            // Fetch current date and time when creating a new timesheet\r\n            creation_datetime = frappe.datetime.now_datetime();\r\n        } else {\r\n            // Fetch creation date and time from the parent document\r\n            creation_datetime = frm.doc.creation;\r\n        }\r\n\r\n        // Assign date and time for the first row if it exists\r\n        if (frm.doc.time_logs && frm.doc.time_logs.length > 0) {\r\n            frm.doc.time_logs[0].from_time = creation_datetime;\r\n            // Other field assignments can be done similarly\r\n        }\r\n\r\n        // Auto-populate rows based on the day of the week\r\n        var dayOfWeek = new Date(creation_datetime).getDay();\r\n        var numRowsToAdd = 0;\r\n\r\n        switch(dayOfWeek) {\r\n            case 1: // Monday\r\n                numRowsToAdd = 5;\r\n                break;\r\n            case 2: // Tuesday\r\n                numRowsToAdd = 4;\r\n                break;\r\n            case 3: // Wednesday\r\n                numRowsToAdd = 3;\r\n                break;\r\n            case 4: // Thursday\r\n                numRowsToAdd = 2;\r\n                break;\r\n            case 5: // Friday\r\n                numRowsToAdd = 1;\r\n                break;\r\n                \r\n            default:\r\n                numRowsToAdd = 0; // Add no rows for other days\r\n        }\r\n\r\n        // Populate rows in the child table starting from the second row\r\n        var start_datetime = frappe.datetime.add_days(creation_datetime, 1); // Start from the next day\r\n        for (var i = 1; i < numRowsToAdd; i++) { // Start from i=1 for the second row\r\n            var new_row = frappe.model.add_child(frm.doc, \"Timesheet Detail\", \"time_logs\");\r\n            new_row.from_time = start_datetime;\r\n            // Other field assignments can be done similarly\r\n            start_datetime = frappe.datetime.add_days(start_datetime, 1); // Move to the next day\r\n        }\r\n\r\n        // Refresh the child table to reflect the changes\r\n        frm.refresh_field('time_logs');\r\n    }\r\n});\r\n",
+  "view": "Form"
+ }
+]

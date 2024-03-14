@@ -39,7 +39,11 @@ fixtures = [{
         },
 			{
 				"doctype": "Workflow State"
-			}
+			},
+            {
+                "doctype":"Client Script"
+            }
+        
 	]
 # Svg Icons
 # ------------------
