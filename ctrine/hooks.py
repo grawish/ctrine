@@ -42,6 +42,9 @@ fixtures = [{
 			},
             {
                 "doctype":"Client Script"
+            },
+            {
+                "doctype":"Timesheet"
             }
         
 	]
