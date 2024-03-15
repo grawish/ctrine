@@ -2,6 +2,17 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
+  "dt": "Timesheet",
+  "enabled": 1,
+  "modified": "2024-03-14 21:50:09.187584",
+  "module": "Ctrine",
+  "name": "Reason Prompt",
+  "script": "frappe.ui.form.on('Timesheet', {\n    refresh: function(frm) {\n        if(frappe.user.has_role(\"Report Manager\")){\n       if (((cur_frm.doc.workflow_state === 'Approved')||(cur_frm.doc.workflow_state === 'Rejected'))&& !cur_frm.doc.reason) {\n            // Define a function to show the dialog\n            var showDialog = function() {\n                let d = new frappe.ui.Dialog({\n                    title: 'Reason',\n                    fields: [{\n                        label: 'Reason',\n                        fieldname: 'reason',\n                        fieldtype: 'Small Text'\n                    }],\n                    size: 'large',\n                    primary_action_label: __('Submit'),\n                    primary_action: function() {\n                        frappe.call({\n                            method: 'ctrine.ctrine.server_scripts.reason.reason',\n                            args: {\n                                docname: frm.docname,\n                                reason: d.get_value('reason'),\n                            },\n                            callback: function(response) {\n                                if(response.message==='success'){\n                                frappe.show_alert({\n                                message: \"Reason saved\",\n                                indicator: \"green\"\n                                });\n                                }\n           \n                                console.log(response.message);\n                                frm.reload_doc();\n                                d.hide();\n                            }\n                        });\n                    }\n                });\n                d.show();\n            };\n\n            // Invoke the function to show the dialog\n            showDialog();\n        }\n        } \n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
   "dt": "Project Milestone",
   "enabled": 1,
   "modified": "2024-02-21 14:04:44.526688",
