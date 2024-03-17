@@ -4,6 +4,17 @@
   "doctype": "Client Script",
   "dt": "Timesheet",
   "enabled": 1,
+  "modified": "2024-03-17 14:51:55.248885",
+  "module": "Ctrine",
+  "name": "Timesheet and story",
+  "script": "frappe.ui.form.on('Timesheet Detail', {\n    project: function(frm, cdt, cdn) {\n        var child = locals[cdt][cdn];\n        console.log(child);\n        var project = child.project;\n        frappe.call({\n        method: 'ctrine.ctrine.server_scripts.story.fetch_hours',\n        args:{\n            project_name:project\n        },\n        callback:function(r){\n            if(r.message){\n                var totalHours = r.message;\n                console.log(totalHours);\n                frappe.model.set_value(cdt, cdn, 'billing_hours', totalHours);\n                }\n        }\n    });\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Timesheet",
+  "enabled": 1,
   "modified": "2024-03-14 21:50:09.187584",
   "module": "Ctrine",
   "name": "Reason Prompt",
