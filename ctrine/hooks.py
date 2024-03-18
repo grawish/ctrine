@@ -43,9 +43,7 @@ fixtures = [{
             {
                 "doctype":"Client Script"
             },
-            {
-                "doctype":"Timesheet"
-            }
+            
         
 	]
 # Svg Icons
