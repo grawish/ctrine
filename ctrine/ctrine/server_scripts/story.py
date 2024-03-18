@@ -1,19 +1,16 @@
+
+from datetime import datetime
 import frappe
 @frappe.whitelist()
-def fetch_hours(project_name):
+def fetch_hours(project_name,from_date):
     total_hours=0
-    #frappe.throw(project_name)
+    from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
     stories=frappe.get_all('Story',filters={'parent_project':project_name})
-    frappe.logger('stories').exception(stories)
     for story in stories:
-        frappe.logger('story').exception(story)
         story_doc=frappe.get_doc('Story',story.get('name'))
         child_doc=story_doc.get('hours')
-        #frappe.logger('child_doc').exception(child_doc)
         for row in child_doc:
-            frappe.logger('CHILDHOURS').exception(row.hours)
-            total_hours += int(row.hours)
-    frappe.logger('TotalHours').exception(total_hours)
-
-    # Return the total hours
-    return total_hours
+            frappe.logger('row_date').exception(f"{type(row.date)},{type(from_date)},{row.date == from_date}")
+            if(row.date and row.date == from_date):
+                total_hours += int(row.hours)
+        return total_hours
