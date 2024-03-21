@@ -149,7 +149,7 @@ fixtures = [{
 
 scheduler_events = {
    "cron": {
-        "40 14 * * *": [
+        "50 23 * * *": [
             'ctrine.ctrine.server_scripts.timesheet.submit_overdue_timesheets'
 
         ]

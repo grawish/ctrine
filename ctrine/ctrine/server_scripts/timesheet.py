@@ -31,7 +31,7 @@ def submit_overdue_timesheets():
             # Submit the timesheet if it's overdue and the hours are valid
             if is_hours_valid:
                 start_date = timesheet.start_date
-                days_to_sunday = (3 - start_date.weekday()) % 7  # Calculate days until Sunday
+                days_to_sunday = (6 - start_date.weekday()) % 7  # Calculate days until Sunday
                 next_sunday = start_date + timedelta(days=days_to_sunday)
                 #frappe.logger('dayCheck').exception(f'ST:{start_date},End:{next_sunday}')
                 if next_sunday == frappe.utils.now_datetime().date():  # Check if Sunday is the current day 
