@@ -5,7 +5,7 @@ def reason(**kwargs):
     try:
         if kwargs.get('docname'):
             frappe.db.set_value('Timesheet', kwargs.get('docname'), {
-            'reason': kwargs.get('reason'),
+            'custom_reason': kwargs.get('reason'),
         })
 
             return "success"
