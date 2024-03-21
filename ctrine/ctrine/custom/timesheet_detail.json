@@ -80,7 +80,7 @@
    "field_name": "reason",
    "idx": 0,
    "is_system_generated": 0,
-   "modified": "2024-03-21 16:38:57.514389",
+   "modified": "2024-03-21 17:11:52.749971",
    "modified_by": "Administrator",
    "module": "Ctrine",
    "name": "Timesheet Detail-reason-read_only",
@@ -88,7 +88,7 @@
    "property": "read_only",
    "property_type": "Check",
    "row_name": null,
-   "value": "1"
+   "value": "0"
   },
   {
    "_assign": null,
