@@ -15,10 +15,10 @@
   "doctype": "Client Script",
   "dt": "Timesheet",
   "enabled": 1,
-  "modified": "2024-03-21 17:28:39.215425",
+  "modified": "2024-03-21 20:49:47.294140",
   "module": "Ctrine",
   "name": "Timesheet and story",
-  "script": "frappe.ui.form.on('Timesheet Detail', {\r\n    project: function(frm, cdt, cdn) {\r\n        var child = locals[cdt][cdn];\r\n        console.log(child);\r\n        var project = child.project;\r\n        var from_date_string = child.from_time; // Assuming from_date is in string format\r\n        // Convert from_date string to Date object\r\n        var from_date = new Date(from_date_string);\r\n        // Convert from_date to YYYY-MM-DD format using frappe.datetime\r\n        var formatted_date = frappe.datetime.obj_to_str(from_date).split(' ')[0];\r\n        frappe.call({\r\n            method: 'ctrine.ctrine.server_scripts.story.fetch_hours',\r\n            args:{\r\n                project_name: project,\r\n                from_date: formatted_date,\r\n                employee :frm.doc.employee\r\n                \r\n            },\r\n            callback: function(r) {\r\n                if (r.message) {\r\n                    var totalHours = r.message;\r\n                    frappe.model.set_value(cdt, cdn, 'billing_hours', totalHours);\r\n                }\r\n            }\r\n        });\r\n    }\r\n});\r\n",
+  "script": "frappe.ui.form.on('Timesheet Detail', {\n    project: function(frm, cdt, cdn) {\n        var child = locals[cdt][cdn];\n        var project = child.project;\n        var from_date_string = child.from_time; // Assuming from_date is in string format\n        // Convert from_date string to Date object\n        var from_date = new Date(from_date_string);\n        // Convert from_date to YYYY-MM-DD format using frappe.datetime\n        var formatted_date = frappe.datetime.obj_to_str(from_date).split(' ')[0];\n        if(frm.doc.employee && project && formatted_date){\n        frappe.call({\n            method: 'ctrine.ctrine.server_scripts.story.fetch_hours',\n            args:{\n                project_name: project,\n                from_date: formatted_date,\n                employee :frm.doc.employee\n                \n            },\n            callback: function(r) {\n                if (r.message) {\n                    var totalHours = r.message;\n                    frappe.model.set_value(cdt, cdn, 'billing_hours', totalHours);\n                }\n            }\n        });\n        }\n    }\n});",
   "view": "Form"
  },
  {
