@@ -152,7 +152,11 @@ scheduler_events = {
         "50 23 * * *": [
             'ctrine.ctrine.server_scripts.timesheet.submit_overdue_timesheets'
 
+        ],
+        "00 00 * * 1":[
+            'ctrine.ctrine.server_scripts.auto_timesheet.auto_create_timesheets'
         ]
+
    }
 }
 
