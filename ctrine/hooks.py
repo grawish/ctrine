@@ -151,7 +151,8 @@ scheduler_events = {
         "50 23 * * *": [
             'ctrine.ctrine.server_scripts.timesheet.submit_overdue_timesheets'
 
-        ]
+        ],
+        "0 0 * * *": ["ctrine.ctrine.jobs.task.put_child_task_on_ho"]
    }
 }
 
