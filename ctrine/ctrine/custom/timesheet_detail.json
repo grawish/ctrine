@@ -37,7 +37,7 @@
    "is_virtual": 0,
    "label": "Reason",
    "length": 0,
-   "mandatory_depends_on": "eval:(doc.is_billable)&&doc.hours>doc.billing_hours",
+   "mandatory_depends_on": "eval:(doc.is_billable) && doc.hours > doc.billing_hours",
    "modified": "2024-03-21 18:10:03.420342",
    "modified_by": "Administrator",
    "module": null,
