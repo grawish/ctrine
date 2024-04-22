@@ -28,7 +28,7 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Task" : "public/js/task.js" }
+doctype_js = {"Timesheet" : "public/js/timesheet.js" }
 
 doctype_list_js = {"Story": "ctrine/doctype/story/story_calender.js",
                    "Project Milestone": "ctrine/doctype/project_milestone/project_milestone_calender.js"}
@@ -155,7 +155,7 @@ scheduler_events = {
         "00 00 * * *":[
             'ctrine.ctrine.server_scripts.auto_timesheet.auto_create_timesheets'
         ],
-        "0 0 * * *": ["ctrine.ctrine.jobs.task.put_child_task_on_ho"]
+        "* * * * *": ['ctrine.ctrine.jobs.task.put_child_task_on_hold']
    }
 }
 
