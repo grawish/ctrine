@@ -28,7 +28,8 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Task" : "public/js/task.js" }
+
 doctype_list_js = {"Story": "ctrine/doctype/story/story_calender.js",
                    "Project Milestone": "ctrine/doctype/project_milestone/project_milestone_calender.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -128,20 +129,18 @@ fixtures = [{
 # Override standard doctype classes
 
 # override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
+# 	"Timesheet": "ctrine.ctrine.override.timesheet.CustomTimesheet"
 # }
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Timesheet": {
+		"on_update": "ctrine.ctrine.override.timesheet.on_update"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -155,8 +154,8 @@ scheduler_events = {
         ],
         "00 00 * * *":[
             'ctrine.ctrine.server_scripts.auto_timesheet.auto_create_timesheets'
-        ]
-
+        ],
+        "0 0 * * *": ["ctrine.ctrine.jobs.task.put_child_task_on_ho"]
    }
 }
 
