@@ -139,7 +139,11 @@ fixtures = [{
 doc_events = {
 	"Timesheet": {
 		"on_update": "ctrine.ctrine.override.timesheet.on_update"
-	}
+	},
+    "Task":{
+        "on_update":"ctrine.ctrine.jobs.task.on_update"
+    },
+ 
 }
 
 # Scheduled Tasks
@@ -155,7 +159,9 @@ scheduler_events = {
         "00 00 * * *":[
             'ctrine.ctrine.server_scripts.auto_timesheet.auto_create_timesheets'
         ],
-        "* * * * *": ['ctrine.ctrine.jobs.task.put_child_task_on_hold']
+        "* * * * *": [
+            'ctrine.ctrine.jobs.task.put_child_task_on_hold'
+        ],
    }
 }
 
