@@ -34,6 +34,7 @@ def get_assigned_project_to_user():
     projects = []
     all_projects = frappe.db.sql("select name,_assign as assign  from `tabProject`",as_dict=1) 
     for i in all_projects:
-        if user.lower() == 'administrator' or user in eval(i.get('assign'))  :
-            projects.append(i.get('name'))      
+        if i.get('assign'):
+            if user.lower() == 'administrator' or user in eval(i.get('assign'))  :
+                projects.append(i.get('name'))      
     return projects        

@@ -57,6 +57,22 @@ frappe.ui.form.on('Timesheet', {
     }
 });
 
+frappe.ui.form.on('Timesheet Detail', {
+    task: function(frm, cdt, cdn) {
+        var child = locals[cdt][cdn];
+        var task = child.task;
+
+        if (task) {
+            frappe.db.get_doc('Task', task).then(function(doc) {
+                if (doc && doc.status === 'Hold') {
+                    frappe.model.set_value(cdt, cdn, 'task', '');
+                    frappe.msgprint('Hold task not allowed.');
+                }
+            });
+        }
+    }
+});
+
 
 function getAssignedProjects() {
     var projects = [];

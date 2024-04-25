@@ -9,8 +9,8 @@ def put_child_task_on_hold():
         if len(child_tasks):
             child_task_list.extend([ i.get('name') for i in child_tasks])
     if len(child_task_list):        
-        query = """ Update `tabTask` t set t.status = 'Hold' WHERE t.name IN {} """.format(tuple(child_task_list))
-        frappe.db.sql(query)  
+        query = """ Update `tabTask` t set t.status = 'Hold' WHERE t.name IN %(li)s """
+        frappe.db.sql(query,{'li':tuple(child_task_list)})  
         frappe.db.commit()
         return query
 
