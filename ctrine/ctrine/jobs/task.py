@@ -12,6 +12,7 @@ def put_child_task_on_hold():
         query = """ Update `tabTask` t set t.status = 'Hold' WHERE t.name IN {} """.format(tuple(child_task_list))
         frappe.db.sql(query)  
         frappe.db.commit()
+        return query
 
 
 def on_update(doc,method):
