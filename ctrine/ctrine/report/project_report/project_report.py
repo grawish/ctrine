@@ -32,8 +32,8 @@ def get_data(project_doc):
         tasks = frappe.get_all('Task Time',filters={'parent':story.get('name')},fields=['task'],group_by='task')
         for task in tasks:
             task_doc = frappe.get_doc('Task',task.get('task'))
-            day_wise_col = day_wise_data(str(story.get('start_date')), str(story.get('end_date')),"<p style='margin:-10px;height:100px; background-color:blue!important;'>11</p>")
-            week_off_days = get_week_off_date(str(project_doc.expected_start_date), str(project_doc.expected_end_date),"<p style='margin:-10px;height:100px; background-color:black!important;'>11</p>")
+            day_wise_col = day_wise_data(str(story.get('start_date')), str(story.get('end_date')),"<p style='margin:-10px;height:100px; background-color:blue!important;'></p>")
+            week_off_days = get_week_off_date(str(project_doc.expected_start_date), str(project_doc.expected_end_date),"<p style='margin:-10px;height:100px; background-color:black!important;'></p>")
             temp = {"col1": story.get('name'), "col2": task_doc.subject,"col3": "Planned"}
             temp.update(day_wise_col)
             temp.update(week_off_days)
@@ -42,7 +42,7 @@ def get_data(project_doc):
             max_date, min_date = get_actual_date(project_doc.name, task_doc.name)
             temp2 = {"col3": "Actual"}
             if max_date and min_date:
-                actual_day_data = day_wise_data(str(min_date), str(max_date),"<p style='margin:-10px;height:100px; background-color:green!important;'>11</p>")
+                actual_day_data = day_wise_data(str(min_date), str(max_date),"<p style='margin:-10px;height:100px; background-color:green!important;'></p>")
                 temp2.update(actual_day_data)
             data.append(temp2)
     return data
