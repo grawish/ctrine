@@ -10,6 +10,11 @@ frappe.query_reports["Project Report"] = {
 			options: "Project",
 			reqd: 1
 			
-		}
+		},
+		{
+			fieldname: "include_draft_timesheets",
+			label: __("Include Timesheets in Draft Status"),
+			fieldtype: "Check",
+		},
 	]
 };

@@ -11,19 +11,24 @@ def execute(filters=None):
     project = filters.get("project")
     project_doc = frappe.get_doc("Project", project)
     columns = get_columns(project_doc)
-    data = get_data(project_doc)
+    data = get_data(filters,project_doc)
     day_wise_col = day_wise_columns(str(project_doc.expected_start_date), str(project_doc.expected_end_date))
     columns.extend(day_wise_col)
     return columns, data
 
-def get_data(project_doc):
+def get_data(filters, project_doc):
     data = []
     assignee = project_doc._assign
     assign_users=json.loads(assignee)
     for user in assign_users:
         f_name = get_full_user_name(user)
         role = get_role(user)[0]
-        data.append({"col2": role,"col3": f_name})
+        emp = frappe.get_value("Employee", {"user_id":user})
+        daywise_billing_hours = get_timesheet_data(filters,emp)
+        frappe.logger("ss").exception(daywise_billing_hours)
+        emp_dict = {"col2": role,"col3": f_name}
+        emp_dict.update(daywise_billing_hours)
+        data.append(emp_dict)
     data.append({"col1": " ","col2":" "})
     data.append({"col1": "Project Management","col3":"Planned"})
     data.append({"col3":"Actual"})
@@ -37,9 +42,8 @@ def get_data(project_doc):
             temp = {"col1": story.get('name'), "col2": task_doc.subject,"col3": "Planned"}
             temp.update(day_wise_col)
             temp.update(week_off_days)
-            frappe.logger("ss").exception(temp)
             data.append(temp)
-            max_date, min_date = get_actual_date(project_doc.name, task_doc.name)
+            max_date, min_date = get_actual_date(project_doc.name, task_doc.name, filters)
             temp2 = {"col3": "Actual"}
             if max_date and min_date:
                 actual_day_data = day_wise_data(str(min_date), str(max_date),"<p style='margin:-10px;height:100px; background-color:green!important;'></p>")
@@ -54,10 +58,19 @@ def get_full_user_name(user=None):
 def get_role(user=None):
     return frappe.get_roles(user)
 
-def get_actual_date(project,task):
-    data = frappe.get_all("Timesheet Detail",{"project":project,"task":task},["from_time","to_time"])
+def get_actual_date(project,task, filters):
+    data = frappe.get_all("Timesheet Detail",{"project":project,"task":task},["from_time","to_time","parent"])
+    sorted_data = []
+    if not filters.get("include_draft_timesheets"):
+        for item in data:
+            if frappe.get_value("Timesheet",item.get('parent'),"docstatus") == "1":
+                sorted_data.append(item)
+    else:
+        for item in data:
+            if frappe.get_value("Timesheet",item.get('parent'),"docstatus") != "2":
+                sorted_data.append(item)
     import datetime
-    all_dates = [item['from_time'].strftime('%Y-%m-%d') for item in data] + [item['to_time'].strftime('%Y-%m-%d') for item in data]
+    all_dates = [item['from_time'].strftime('%Y-%m-%d') for item in sorted_data] + [item['to_time'].strftime('%Y-%m-%d') for item in sorted_data]
     if all_dates:
         date_objects = [datetime.datetime.strptime(date_str, '%Y-%m-%d').date() for date_str in all_dates]
 
@@ -136,3 +149,51 @@ def get_columns(project_doc):
         
     ]
     return columns
+
+
+def get_timesheet_data(filters,emp):
+    record_filters = []
+    if not filters.get("include_draft_timesheets"):
+        record_filters.append(["docstatus", "=", 1])
+    else:
+        record_filters.append(["docstatus", "!=", 2])
+    record_filters.append(["employee", "=", emp])
+
+    timesheets = frappe.get_all(
+        "Timesheet", filters=record_filters, fields=["employee", "employee_name", "name"]
+    )
+    timesheet_ids = [item['name'] for item in timesheets]
+    total_billing_hours = get_timesheet_details(filters,timesheet_ids)
+    return total_billing_hours
+
+
+def get_timesheet_details(filters, timesheet):
+    timesheet_details_filter = {"parent": ["in", timesheet]}
+
+    timesheet_details_filter["project"] = filters.project
+    timesheet_details = frappe.get_all(
+        "Timesheet Detail",
+        filters=timesheet_details_filter,
+        fields=[
+            "from_time",
+            "to_time",
+            "hours",
+            "is_billable",
+            "billing_hours",
+            "billing_rate",
+            "parent",
+        ],
+    )
+    daywise_billing_hours = frappe._dict()  # Using Frappe's dictionary
+    
+    for item in timesheet_details:
+        billing_hours = item.get('billing_hours', 0.0)
+        date = item.get('from_time').date()  # Extract date from from_time
+        day_key = date.strftime('%d-%m-%y')  # Correct date formatting
+        
+        # Check if key exists, if not initialize it with 0.0
+        if day_key not in daywise_billing_hours:
+            daywise_billing_hours[day_key] = 0.0
+        
+        daywise_billing_hours[day_key] += billing_hours
+    return daywise_billing_hours
