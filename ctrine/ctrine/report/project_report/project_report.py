@@ -19,37 +19,40 @@ def execute(filters=None):
 def get_data(filters, project_doc):
     data = []
     assignee = project_doc._assign
-    assign_users=json.loads(assignee)
+    assign_users = json.loads(assignee)
     for user in assign_users:
         f_name = get_full_user_name(user)
         role = get_role(user)[0]
-        emp = frappe.get_value("Employee", {"user_id":user})
-        daywise_billing_hours = get_timesheet_data(filters,emp)
+        emp = frappe.get_value("Employee", {"user_id": user})
+        daywise_billing_hours = get_timesheet_data(filters, emp)
         frappe.logger("ss").exception(daywise_billing_hours)
-        emp_dict = {"col2": role,"col3": f_name}
+        emp_dict = {"col2": role, "col3": f_name}
         emp_dict.update(daywise_billing_hours)
         data.append(emp_dict)
-    data.append({"col1": " ","col2":" "})
-    data.append({"col1": "Project Management","col3":"Planned"})
-    data.append({"col3":"Actual"})
-    stories = frappe.get_all('Story',filters={'parent_project':project_doc.name},fields=['name','start_date','end_date'])
+    data.append({"col1": " ", "col2": " "})
+    data.append({"col1": "Project Management", "col3": "Planned"})
+    data.append({"col3": "Actual"})
+    # Fetch stories with 'story_name'
+    stories = frappe.get_all('Story', filters={'parent_project': project_doc.name}, fields=['name', 'start_date', 'end_date', 'subject'])  
     for story in stories:
-        tasks = frappe.get_all('Task Time',filters={'parent':story.get('name')},fields=['task'],group_by='task')
+        tasks = frappe.get_all('Task Time', filters={'parent': story.get('name')}, fields=['task'], group_by='task')
         for task in tasks:
-            task_doc = frappe.get_doc('Task',task.get('task'))
-            day_wise_col = day_wise_data(str(story.get('start_date')), str(story.get('end_date')),"<p style='margin:-10px;height:100px; background-color:blue!important;'></p>")
-            week_off_days = get_week_off_date(str(project_doc.expected_start_date), str(project_doc.expected_end_date),"<p style='margin:-10px;height:100px; background-color:black!important;'></p>")
-            temp = {"col1": story.get('name'), "col2": task_doc.subject,"col3": "Planned"}
+            task_doc = frappe.get_doc('Task', task.get('task'))
+            day_wise_col = day_wise_data(str(task_doc.get('exp_start_date')), str(task_doc.get('exp_end_date')), "<p style='margin:-10px;height:100px; background-color:blue!important;'></p>")
+            week_off_days = get_week_off_date(str(project_doc.expected_start_date), str(project_doc.expected_end_date), "<p style='margin:-10px;height:100px; background-color:black!important;'></p>")
+            temp = {"col1": story.get('subject'), "col2": task_doc.subject, "col3": "Planned"}  
             temp.update(day_wise_col)
             temp.update(week_off_days)
             data.append(temp)
             max_date, min_date = get_actual_date(project_doc.name, task_doc.name, filters)
             temp2 = {"col3": "Actual"}
             if max_date and min_date:
-                actual_day_data = day_wise_data(str(min_date), str(max_date),"<p style='margin:-10px;height:100px; background-color:green!important;'></p>")
+                actual_day_data = day_wise_data(str(min_date), str(max_date), "<p style='margin:-10px;height:100px; background-color:green!important;'></p>")
                 temp2.update(actual_day_data)
+                temp2.update(week_off_days)
             data.append(temp2)
     return data
+
 
 def get_full_user_name(user=None):
     f_name = frappe.get_value("User", user, "full_name")
