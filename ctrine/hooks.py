@@ -31,7 +31,10 @@ app_license = "mit"
 doctype_js = {
                 "Timesheet" : "public/js/timesheet.js",
                 "Job Applicant": "public/js/job_applicant.js",
+                "Employee" : "public/js/employee.js",
             }
+            
+
 
 doctype_list_js = {"Story": "ctrine/doctype/story/story_calender.js",
                    "Project Milestone": "ctrine/doctype/project_milestone/project_milestone_calender.js"}
