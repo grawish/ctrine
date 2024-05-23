@@ -134,9 +134,9 @@ fixtures = [{
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"Timesheet": "ctrine.ctrine.override.timesheet.CustomTimesheet"
-# }
+override_doctype_class = {
+	"Timesheet": "ctrine.ctrine.override.timesheet.CustomTimesheet"
+}
 
 # Document Events
 # ---------------

@@ -1,13 +1,43 @@
 from erpnext.projects.doctype.timesheet.timesheet import Timesheet
 import frappe
+from frappe.utils import flt
+from frappe import _
 
 
 class CustomTimesheet(Timesheet):
-    def before_save(self):
-        print('hssh')
-    def on_update(self):
-        print(frappe.as_json(self),"--")
+    # def before_save(self):
+    #     print('hssh')
+    # def on_update(self):
+    #     print(frappe.as_json(self),"--")
         
+    def on_submit(self):
+        self.validate_mandatory_fields()
+        self.update_task_and_project()
+
+    def validate_mandatory_fields(self):
+        for data in self.time_logs:
+            if not data.from_time and not data.to_time:
+                frappe.throw(_("Row {0}: From Time and To Time is mandatory.").format(data.idx))
+
+            if not data.activity_type and self.employee:
+                frappe.throw(_("Row {0}: Activity Type is mandatory.").format(data.idx))
+
+            # if flt(data.hours) == 0.0:
+            #     frappe.throw(_("Row {0}: Hours value must be greater than zero1.").format(data.idx))
+
+    def update_task_and_project(self):
+        tasks, projects = [], []
+
+        for data in self.time_logs:
+            if data.task and data.task not in tasks:
+                task = frappe.get_doc("Task", data.task)
+                task.update_time_and_costing()
+                task.save()
+                tasks.append(data.task)
+
+            elif data.project and data.project not in projects:
+                frappe.get_doc("Project", data.project).update_project()
+                projects.append(data.project)
 
  
 def on_update(doc,method):
