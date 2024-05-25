@@ -158,11 +158,13 @@ doc_events = {
 
 scheduler_events = {
    "cron": {
-        "50 23 * * *": [
+        "50 23 * * SAT": [
             'ctrine.ctrine.server_scripts.timesheet.submit_overdue_timesheets'
 
         ],
-        "00 00 * * *":[
+
+
+        "10 0 * * MON":[
             'ctrine.ctrine.server_scripts.auto_timesheet.auto_create_timesheets'
         ],
         "* * * * *": [

@@ -22,6 +22,7 @@ def auto_create_timesheets():
                     new_timesheet = frappe.get_doc({
                         "doctype": "Timesheet",
                         "employee": timesheet["employee"],
+                        "workflow_state": "draft",
                     })
                     for i in range(7):
                         current_day = start_of_week + timedelta(days=i)
@@ -36,3 +37,23 @@ def auto_create_timesheets():
                     frappe.logger('Ts-exist').exception(f"TS:{timesheet},Timesheet exists for {time_doc.get('employee_name')},Date:{time_doc.get('start_date')}")
     except Exception as e:
         frappe.logger('error_message').exception(f"An error occurred: {str(e)}")
+
+
+# @frappe.whitelist()
+# def auto_submit_timesheets():
+#     try:
+#         # Get all open timesheets
+#         draft_timesheets = frappe.get_all("Timesheet", filters={"workflow_state": "Draft"}, fields=["*"])
+        
+#         for timesheet in draft_timesheets:
+#             time_doc = frappe.get_doc("Timesheet", timesheet.get['name'])
+#             # Submit the timesheet
+#             time_doc.submit()
+#             # Commit the transaction to the database
+#             frappe.db.commit()
+#             # Log the submitted timesheet for reference
+#             frappe.logger('Ts-SUBMIT').exception(f"Submitted timesheet: {time_doc.name}")
+            
+#     except Exception as e:
+#         frappe.logger('error_message').exception(f"An error occurred: {str(e)}")
+
