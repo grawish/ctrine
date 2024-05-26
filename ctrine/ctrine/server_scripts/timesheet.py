@@ -17,7 +17,7 @@ def submit_overdue_timesheets():
                 if start_date and time_doc.get('employee_name') and time_doc.workflow_state=="draft":
                     days_to_sunday = (5 - start_date.weekday()) % 7 
                     next_sunday = start_date + timedelta(days=days_to_sunday)
-                    if next_sunday == frappe.utils.now_datetime().date():  # Check if Sunday is the current day 
+                    if next_sunday <= frappe.utils.now_datetime().date():  # Check if Sunday is the current day 
                         frappe.db.set_value("Timesheet", timesheet.name, "docstatus", 0)
                         frappe.db.set_value("Timesheet", timesheet.name, "workflow_state", "Submitted")
                         frappe.db.set_value("Timesheet", timesheet.name, "status", "Draft")
