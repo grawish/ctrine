@@ -86,3 +86,35 @@ function getAssignedProjects() {
     });
     return projects;
 }
+
+
+
+
+
+frappe.ui.form.on('Timesheet', {
+    onload: function(frm) {
+        if (frm.doc.status === 'Approved' || frm.doc.status === 'Cancelled') {
+            frm.set_read_only(true);
+        }
+    },
+    refresh: function(frm) {
+        // If the timesheet is cancelled, show the Amend button
+        if (frm.doc.status === 'Cancelled') {
+            frm.page.set_primary_action(__('Amend'), function() {
+                // Make a call to fetch the previous data
+                frappe.call({
+                    method: 'ctrine.ctrine.override.timesheet.create_amended_timesheet',
+                    args: {
+                        timesheet_name: frm.doc.name
+                    },
+                    callback: function(r) {
+                        if (r.message) {
+                            // Redirect to the newly created timesheet
+                            frappe.set_route('Form', 'Timesheet', r.message);
+                        }
+                    }
+                });
+            }).addClass('btn-primary');
+        }
+    }
+});

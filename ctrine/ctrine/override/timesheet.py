@@ -55,4 +55,19 @@ def on_update(doc,method):
             frappe.db.commit()   
             
         
+
+@frappe.whitelist()
+def create_amended_timesheet(timesheet_name):
+    # Fetch the previous timesheet data
+    prev_timesheet = frappe.get_doc("Timesheet", timesheet_name)
+
+    # Create a new timesheet with the previous data
+    new_timesheet = frappe.copy_doc(prev_timesheet)
+    new_timesheet.status = "Draft"  # Optionally change the status to Draft
+    new_timesheet.workflow_state = "Draft"
+    new_timesheet.amended_from = timesheet_name  # Keep track of the original timesheet
+    new_timesheet.insert()
+
+    return new_timesheet.name
+
         
