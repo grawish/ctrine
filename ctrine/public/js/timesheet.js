@@ -12,6 +12,31 @@ frappe.ui.form.on('Timesheet', {
             };
             console.log(getAssignedProjects())
 
+
+              // Set filters for "task" field in "Timesheet Detail" child table
+                frm.fields_dict['time_logs'].grid.get_field('task').get_query = function(doc, cdt, cdn) {
+                    var child = locals[cdt][cdn];
+                    var project = child.project;
+                    var from_time = child.from_time;
+                    var to_time = child.to_time;
+
+                    if (project && from_time && to_time) {
+                        var from_date = frappe.datetime.str_to_user(from_time).split(' ')[0];
+                        var to_date = frappe.datetime.str_to_user(to_time).split(' ')[0];
+                        return {
+                            filters: [
+                                ['Task', 'project', '=', project],
+                                ['Task', 'exp_start_date', '>=', from_date],
+                                // ['Task', 'exp_end_date', '<=', to_date]
+                            ]
+                        };
+                    }
+                    return {};
+                };
+
+
+
+
     },
     setup: function(frm) {
         let user_settings =  {
@@ -86,3 +111,35 @@ function getAssignedProjects() {
     });
     return projects;
 }
+
+
+
+
+
+frappe.ui.form.on('Timesheet', {
+    onload: function(frm) {
+        if (frm.doc.status === 'Approved' || frm.doc.status === 'Cancelled') {
+            frm.set_read_only(true);
+        }
+    },
+    refresh: function(frm) {
+        // If the timesheet is cancelled, show the Amend button
+        if (frm.doc.status === 'Cancelled') {
+            frm.page.set_primary_action(__('Amend'), function() {
+                // Make a call to fetch the previous data
+                frappe.call({
+                    method: 'ctrine.ctrine.override.timesheet.create_amended_timesheet',
+                    args: {
+                        timesheet_name: frm.doc.name
+                    },
+                    callback: function(r) {
+                        if (r.message) {
+                            // Redirect to the newly created timesheet
+                            frappe.set_route('Form', 'Timesheet', r.message);
+                        }
+                    }
+                });
+            }).addClass('btn-primary');
+        }
+    }
+});
