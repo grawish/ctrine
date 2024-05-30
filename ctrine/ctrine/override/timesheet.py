@@ -65,7 +65,7 @@ def create_amended_timesheet(timesheet_name):
     new_timesheet = frappe.copy_doc(prev_timesheet)
     new_timesheet.status = "Draft"  # Optionally change the status to Draft
     new_timesheet.workflow_state = "Draft"
-    new_timesheet.amended_from = timesheet_name  # Keep track of the original timesheet
+    # new_timesheet.amended_from = timesheet_name  # Keep track of the original timesheet
     new_timesheet.insert()
 
     return new_timesheet.name

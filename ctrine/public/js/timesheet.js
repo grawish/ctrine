@@ -12,6 +12,31 @@ frappe.ui.form.on('Timesheet', {
             };
             console.log(getAssignedProjects())
 
+
+              // Set filters for "task" field in "Timesheet Detail" child table
+                frm.fields_dict['time_logs'].grid.get_field('task').get_query = function(doc, cdt, cdn) {
+                    var child = locals[cdt][cdn];
+                    var project = child.project;
+                    var from_time = child.from_time;
+                    var to_time = child.to_time;
+
+                    if (project && from_time && to_time) {
+                        var from_date = frappe.datetime.str_to_user(from_time).split(' ')[0];
+                        var to_date = frappe.datetime.str_to_user(to_time).split(' ')[0];
+                        return {
+                            filters: [
+                                ['Task', 'project', '=', project],
+                                ['Task', 'exp_start_date', '>=', from_date],
+                                // ['Task', 'exp_end_date', '<=', to_date]
+                            ]
+                        };
+                    }
+                    return {};
+                };
+
+
+
+
     },
     setup: function(frm) {
         let user_settings =  {
