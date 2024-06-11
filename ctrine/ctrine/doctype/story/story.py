@@ -30,6 +30,16 @@ class Story(Document):
                     're_assign': False
                 },ignore_permissions= True)
 
+    def validate(self):
+       self.validate_story_within_project_timelines()
+
+    def validate_story_within_project_timelines(self):
+        if self.parent_project:
+            project = frappe.get_doc("Project", self.parent_project)
+            if self.start_date < project.expected_start_date or self.end_date > project.expected_end_date:
+                frappe.throw(_("Story timelines must be within the project's timelines"))
+
+
 
 
 def assign_task_to_user(task, user_id):

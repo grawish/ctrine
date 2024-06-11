@@ -112,16 +112,51 @@ frappe.ui.form.on("Story", {
       });
     });
   },
-});
-
-frappe.ui.form.on("Story", "validate", (frm) => {
-  console.log({ frm });
-  frm.doc.hours.map((hour) => {
-    if (hour.date < frm.doc.start_date || hour.date > frm.doc.end_date) {
-      frappe.msgprint(
-        __("You can not select before story start or after story ends")
-      );
-      frappe.validated = false;
+  validate(frm) {
+    console.log({ frm });
+    frm.doc.hours.map((hour) => {
+      if (hour.date < frm.doc.start_date || hour.date > frm.doc.end_date) {
+        frappe.msgprint(
+          __("You can not select before story start or after story ends")
+        );
+        frappe.validated = false;
+      }
+    });
+ 
+    // New validation: Check if story start and end dates are within project timelines
+    if (frm.doc.parent_project) {
+      frappe.call({
+        method: "frappe.client.get",
+        args: {
+          doctype: "Project",
+          name: frm.doc.parent_project,
+        },
+        callback: function(r) {
+          if (r.message) {
+            let project = r.message;
+            if (frm.doc.start_date < project.expected_start_date || frm.doc.end_date > project.expected_end_date) {
+              frappe.msgprint(
+                __("Story timelines must be within the project's timelines")
+              );
+              frappe.validated = false;
+            }
+          }
+        }
+      });
     }
-  });
-});
+  }
+ });
+ 
+// });
+
+// frappe.ui.form.on("Story", "validate", (frm) => {
+//   console.log({ frm });
+//   frm.doc.hours.map((hour) => {
+//     if (hour.date < frm.doc.start_date || hour.date > frm.doc.end_date) {
+//       frappe.msgprint(
+//         __("You can not select before story start or after story ends")
+//       );
+//       frappe.validated = false;
+//     }
+//   });
+// });
