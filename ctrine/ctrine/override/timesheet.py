@@ -71,3 +71,8 @@ def create_amended_timesheet(timesheet_name):
     return new_timesheet.name
 
         
+
+
+def after_insert(doc, method):
+    if doc.time_logs:
+        doc.db_set("end_date", doc.time_logs[-1].from_time)

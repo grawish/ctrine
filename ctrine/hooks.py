@@ -33,7 +33,7 @@ doctype_js = {
                 "Job Applicant": "public/js/job_applicant.js",
                 "Employee" : "public/js/employee.js",
             }
-            
+             
 
 
 doctype_list_js = {"Story": "ctrine/doctype/story/story_calender.js",
@@ -144,7 +144,8 @@ override_doctype_class = {
 
 doc_events = {
 	"Timesheet": {
-		"on_update": "ctrine.ctrine.override.timesheet.on_update"
+		"on_update": "ctrine.ctrine.override.timesheet.on_update",
+        "after_insert": "ctrine.ctrine.override.timesheet.after_insert"
 	},
     "Task":{
         "on_update":"ctrine.ctrine.jobs.task.on_update"
