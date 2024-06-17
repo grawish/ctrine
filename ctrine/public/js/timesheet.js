@@ -20,18 +20,32 @@ frappe.ui.form.on('Timesheet', {
                     var from_time = child.from_time;
                     var to_time = child.to_time;
 
-                    if (project && from_time && to_time) {
+
+
+                    if (project && from_time) {
                         var from_date = frappe.datetime.str_to_user(from_time).split(' ')[0];
-                        var to_date = frappe.datetime.str_to_user(to_time).split(' ')[0];
                         return {
                             filters: [
                                 ['Task', 'project', '=', project],
-                                ['Task', 'exp_start_date', '>=', from_date],
-                                // ['Task', 'exp_end_date', '<=', to_date]
+                                ['Task', 'exp_end_date', '>=', from_date],
+
                             ]
                         };
                     }
-                    return {};
+                    return{};
+
+                    // if (project && from_time && to_time) {
+                    //     var from_date = frappe.datetime.str_to_user(from_time).split(' ')[0];
+                    //     var to_date = frappe.datetime.str_to_user(to_time).split(' ')[0];
+                    //     return {
+                    //         filters: [
+                    //             ['Task', 'project', '=', project],
+                    //             ['Task', 'exp_start_date', '>=', from_date],
+                    //             // ['Task', 'exp_end_date', '<=', to_date]
+                    //         ]
+                    //     };
+                    // }
+                    // return {};
                 };
 
 
