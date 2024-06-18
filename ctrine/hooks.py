@@ -32,6 +32,7 @@ doctype_js = {
                 "Timesheet" : "public/js/timesheet.js",
                 "Job Applicant": "public/js/job_applicant.js",
                 "Employee" : "public/js/employee.js",
+                "Project": "public/js/project.js",
             }
              
 
