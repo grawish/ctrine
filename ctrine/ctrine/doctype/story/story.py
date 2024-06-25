@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.utils import now
 from frappe.model.document import Document
 from frappe.utils.user import get_user_fullname
@@ -34,8 +35,14 @@ class Story(Document):
        self.validate_story_within_project_timelines()
 
     def validate_story_within_project_timelines(self):
-        if self.parent_project:
+        if not self.start_date or not self.end_date:
+            frappe.throw(_("Start Date and End Date must be set for the story."))
+
+        
+        if self.parent_project:            
             project = frappe.get_doc("Project", self.parent_project)
+            if not project.expected_start_date or not project.expected_end_date:
+                frappe.throw(_("The Project must have both Expected Start Date and Expected End Date."))
             if self.start_date < project.expected_start_date or self.end_date > project.expected_end_date:
                 frappe.throw(_("Story timelines must be within the project's timelines"))
 
